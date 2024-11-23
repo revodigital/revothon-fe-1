@@ -1,3 +1,6 @@
+import { readItems } from "@directus/sdk"
+import { directusClient } from "App"
+
 export interface CreateDriver {
 	licenseId: string
 	name: string
@@ -38,6 +41,18 @@ export interface Driver {
 
 
 export function existDriver(licenseId: string): Driver {
+    directusClient.request(
+		readItems('driver', {
+			fields: ['id', 'licenseId', 'name', 'lastname', 'birthday', 'issueDate', 'validDate', 'blacklist'],
+            filter: {
+                license_id: {
+                    _eq: licenseId
+                }
+            }
+		})
+	)
+   
+    
 	return {
 		id: 1,
 		licenseId: 'XXXXXXXXX',
@@ -62,31 +77,12 @@ export function updateStateLog(complete: boolean): boolean {
 	return true
 }
 
-export function fetchQuestions(): FetchQuestions[] {
-	return [
-		{
-			id: 1,
-			question: '¿Cuál es el nombre de tu mascota?',
-			answer_a: 'A',
-			answer_b: 'B',
-			answer_c: 'C',
-			right_answer: 'A'
-		},
-		{
-			id: 1,
-			question: '¿Cuál es el nombre de tu mascota?',
-			answer_a: 'A',
-			answer_b: 'B',
-			answer_c: 'C',
-			right_answer: 'A'
-		},
-		{
-			id: 1,
-			question: '¿Cuál es el nombre de tu mascota?',
-			answer_a: 'A',
-			answer_b: 'B',
-			answer_c: 'C',
-			right_answer: 'A'
-		}
-	]
+export async function fetchQuestions(): Promise<FetchQuestions[]> {
+    const response = await directusClient.request(
+			readItems('quiz', {
+				fields: ['*']
+			})
+		) ?? []
+
+	return response as FetchQuestions[]
 }

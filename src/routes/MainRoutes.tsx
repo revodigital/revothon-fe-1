@@ -9,6 +9,7 @@ import Loadable from 'ui-components/common/Loadable'
 import LanguageSelection from 'views/default'
 import LicenseAccessError from 'views/licenseAccessError'
 import ScanErrorPage from 'views/licenseScanError'
+import QAPage from 'views/q&a'
 
 const LazyComponent = Loadable(lazy(() => import('../views/licensePlateReader')))
 
@@ -16,23 +17,34 @@ const MainRoutes = {
 	path: '/',
 	element: <MinimalLayout />,
 	children: [
+		// Language page
+		{
+			path: '/language',
+			element: <LanguageSelection />
+		},
+
+		// Scan page
 		{
 			path: '/scan',
 			element: <LazyComponent />
 		},
 
-		{
-			path: '/language',
-			element: <LanguageSelection />
-		},
+		// Page to handle access failed
 		{
 			path: '/accessFailed',
 			element: <LicenseAccessError />
 		},
 
+		// Page to handle scan failed
 		{
 			path: '/scanFailed',
 			element: <ScanErrorPage />
+		},
+
+		// Page q&a
+		{
+			path: '/qa',
+			element: <QAPage />
 		}
 	]
 }

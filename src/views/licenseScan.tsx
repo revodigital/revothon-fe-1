@@ -32,8 +32,7 @@ const LicenseScanResult = ({ licenseData }) => {
 					color: '#fff',
 					marginTop: 6,
 					marginBottom: 2
-				}}
-			>
+				}}>
 				<Typography variant="h3" sx={{ fontWeight: 'bold' }}>
 					V
 				</Typography>
@@ -78,11 +77,7 @@ const LicenseScanResult = ({ licenseData }) => {
 			</Card>
 
 			{/* Bottone Avanti */}
-			<Button
-				variant="contained"
-				color="primary"
-				sx={{ marginTop: 4, width: '90%', maxWidth: 400, padding: 1.5, borderRadius: 2 }}
-			>
+			<Button variant="contained" color="primary" sx={{ marginTop: 4, width: '90%', maxWidth: 400, padding: 1.5, borderRadius: 2 }}>
 				Avanti
 			</Button>
 		</Box>

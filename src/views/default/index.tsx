@@ -27,9 +27,13 @@ const LanguageSelection: React.FC<{}> = () => {
 	}
 
 	return (
-		<Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', height: '100vh'}}>
+		<Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 			{/* Titolo */}
-			<Typography variant="h4" component="h1" align="center" sx={{ margin: '30px auto', fontWeight: 'bold', fontSize: '70px', color: 'red'}}>
+			<Typography
+				variant="h4"
+				component="h1"
+				align="center"
+				sx={{ margin: '30px auto', fontWeight: 'bold', fontSize: '70px', color: 'red' }}>
 				Scegli la lingua
 			</Typography>
 
@@ -40,7 +44,7 @@ const LanguageSelection: React.FC<{}> = () => {
 						<Grid item xs={6} key={language.id}>
 							<Card
 								sx={{
-                                    margin: '30px auto',
+									margin: '30px auto',
 									textAlign: 'center',
 									padding: 2,
 									borderRadius: 2,

@@ -7,6 +7,7 @@ import MinimalLayout from 'layout/MinimalLayout'
 import { lazy } from 'react'
 import Loadable from 'ui-components/common/Loadable'
 import LanguageSelection from 'views/default'
+import SuccessPage from 'views/licenseAccessComplete'
 import LicenseAccessError from 'views/licenseAccessError'
 import ScanErrorPage from 'views/licenseScanError'
 import QAPage from 'views/q&a'
@@ -45,6 +46,11 @@ const MainRoutes = {
 		{
 			path: '/qa',
 			element: <QAPage />
+		},
+
+		{
+			path: '/successPage',
+			element: <SuccessPage />
 		}
 	]
 }

@@ -1,5 +1,6 @@
 import { Home as HomeIcon } from '@mui/icons-material'
 import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import { directusClient } from 'App'
 import { FetchQuestions, fetchQuestions } from 'api/api'
 import { useEffect, useState } from 'react'
 
@@ -11,6 +12,7 @@ const QAPage = () => {
 
 	useEffect(() => {
 		const loadQuestions = async () => {
+            await directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
 			const data = await fetchQuestions()
 
 			setQuestions(data)

@@ -87,17 +87,16 @@ export async function createDriver({
 	validDate,
 	blacklist
 }: CreateDriver): Promise<Driver> {
-	const response =
-		(await directusClient.request(
-			createItem('Drivers', {
-				license_id: licenseId,
-				name,
-				last_name: lastname,
-				birthday,
-				valid_date: validDate,
-				blacklist
-			})
-		)) ?? []
+	const body = {
+		license_id: licenseId,
+		name,
+		last_name: lastname,
+		birthday,
+		valid_date: validDate,
+		blacklist
+	}
+
+	const response = (await directusClient.request(createItem('Drivers', body))) ?? []
 
 	return response as Driver
 }

@@ -14,7 +14,7 @@ export const directusClient = authProvider.getDirectusInstance()
 
 const App = () => {
 	useMemo(() => {
-		directusClient.login(import.meta.env.USERNAME, import.meta.env.PASSWORD)
+		directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
 	}, [])
 
 	return (

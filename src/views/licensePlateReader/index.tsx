@@ -7,8 +7,8 @@ import { slsTextractOcrDevGetDocumentByFileName } from '../../api-read-license/c
 
 AWS.config.update({
 	credentials: {
-		accessKeyId: import.meta.env.VITE_ACCESS_KEY,
-		secretAccessKey: import.meta.env.VITE_ACCESS_SECRET
+		accessKeyId: import.meta.env.VITE_ACCESS_KEY_ID,
+		secretAccessKey: import.meta.env.VITE_SECRET_ACCESS_KEY
 	}
 })
 
@@ -118,8 +118,7 @@ const LicensePlateReader = () => {
 					marginBottom: 2,
 					borderRadius: 2,
 					backgroundColor: '#f9f9f9'
-				}}
-			>
+				}}>
 				<Webcam
 					audio={false}
 					width={400}

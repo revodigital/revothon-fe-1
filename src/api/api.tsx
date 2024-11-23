@@ -1,4 +1,4 @@
-import { readItems } from "@directus/sdk"
+import { createItem, readItems, updateItem } from "@directus/sdk"
 import { directusClient } from "App"
 
 export interface CreateDriver {
@@ -40,40 +40,68 @@ export interface Driver {
 }
 
 
-export function existDriver(licenseId: string): Driver {
-    directusClient.request(
-		readItems('driver', {
-			fields: ['id', 'licenseId', 'name', 'lastname', 'birthday', 'issueDate', 'validDate', 'blacklist'],
-            filter: {
-                license_id: {
-                    _eq: licenseId
-                }
-            }
-		})
-	)
-   
+export async function existDriver(licenseId: string): Promise<Driver | null> {
+     const response = await directusClient.request(
+			readItems('Drivers', {
+				fields: ['id', 'licenseId', 'name', 'lastname', 'birthday', 'issueDate', 'validDate', 'blacklist'],
+				filter: {
+					license_id: {
+						_eq: licenseId
+					}
+				}
+			})
+		)
+
+        if (response.length === 0) {
+            return null
+        }			
+		
+			return response[0] as Driver
+		}
     
-	return {
-		id: 1,
-		licenseId: 'XXXXXXXXX',
-		name: 'Juan',
-		lastname: 'Perez',
-		birthday: '1990-01-01',
-		issueDate: '2020-01-01',
-		validDate: '2020-01-01',
-		blacklist: false
-	}
+
+
+
+export async function createDriver({ licenseId, name, lastname, birthday, issueDate, validDate, blacklist }: CreateDriver): Promise<Driver> {
+    
+const response = await directusClient.request(
+    createItem ('Drivers', {
+        licenseId,
+        name,
+        lastname,
+        birthday,
+        issueDate,
+        validDate,
+        blacklist
+    })
+    ) ?? []
+
+return response as Driver
+	
 }
 
-export function createDriver({ licenseId, name, lastname, birthday, issueDate, validDate, blacklist }: CreateDriver): boolean {
-	return true
+export async function createLog({ autistaId, scan, enteredAt, exitAt, complete }: CreateLog): Promise<CreateLog> {
+    const response = await directusClient.request(
+		createItem('logs', {
+			autistaId,
+			scan,
+			enteredAt,
+			exitAt,
+			complete
+		})
+	) ?? []
+
+return response as CreateLog
+	
 }
 
-export function createLog({ autistaId, scan, enteredAt, exitAt, complete }: CreateLog): boolean {
-	return true
-}
-
-export function updateStateLog(complete: boolean): boolean {
+export async function updateStateLog(_id:number , complete: boolean): Promise<boolean> {
+    await directusClient.request(
+        updateItem('logs', _id ,  {
+            complete
+        })
+         
+    )
 	return true
 }
 

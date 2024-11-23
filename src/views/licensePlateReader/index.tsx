@@ -1,6 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home'
 import { Box, Button, IconButton, Link, Typography } from '@mui/material'
-import { createDriver, existDriver } from 'api/api'
+import { createDriver, createLog, existDriver } from 'api/api'
 import AWS from 'aws-sdk'
 import React, { useState } from 'react'
 import Webcam from 'react-webcam'
@@ -115,14 +115,23 @@ const LicensePlateReader = () => {
 	const handleClick = async () => {
 		setLoading(true)
 		const test = await capture()
+
+		const login = await directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
+
 		if (test) {
 			const sn = test?.name.split('.')
 			const res = await getFileWithRetry(sn[0])
 			if (res) {
-				const driver = await existDriver(res.document_number)
+				const driverExist = await existDriver(res.document_number)
 			} else {
-				const driver = await createDriver(res.document_number, res.first_name, res.last_name, res.expiration_date)
+				const driveCreate = await createDriver(res.document_number, res.first_name, res.last_name, res.expiration_date)
+
 			}
+
+
+			// Create log
+			const log = await createLog()
+
 		}
 		setLoading(false)
 	}

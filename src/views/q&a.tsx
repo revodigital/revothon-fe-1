@@ -1,20 +1,19 @@
 import { Home as HomeIcon } from '@mui/icons-material'
-import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { directusClient } from 'App'
 import { FetchQuestions, fetchQuestions } from 'api/api'
 import { useEffect, useState } from 'react'
-
 
 const QAPage = () => {
 	const [questions, setQuestions] = useState<FetchQuestions[]>([])
 	const [answers, setAnswers] = useState<{ [key: number]: string }>({})
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+	const [errorMessage, setErrorMessage] = useState('')
 
 	useEffect(() => {
 		const loadQuestions = async () => {
-            await directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
+			await directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
 			const data = await fetchQuestions()
-
 			setQuestions(data)
 		}
 		loadQuestions()
@@ -25,15 +24,26 @@ const QAPage = () => {
 			...prev,
 			[questionId]: answer
 		}))
+		setErrorMessage('') // Rimuove il messaggio di errore quando l'utente cambia risposta
 	}
 
 	const handleNext = () => {
+		const currentQuestion = questions[currentQuestionIndex]
+
+		// Controlla se la risposta selezionata è corretta
+        console.log(answers[currentQuestion.id])
+        console.log(currentQuestion.right_answer)
+		if (answers[currentQuestion.id] !== currentQuestion.right_answer) {
+			setErrorMessage('La risposta è sbagliata. Prova di nuovo!')
+			return
+		}
+
+		// Vai avanti se la risposta è corretta
 		if (currentQuestionIndex < questions.length - 1) {
 			setCurrentQuestionIndex(currentQuestionIndex + 1)
 		} else {
 			// Logica finale: invio risposte o navigazione
 			console.log('Risposte inviate:', answers)
-			// Esempio: navigazione a una nuova pagina
 			// navigate('/results')
 		}
 	}
@@ -78,21 +88,28 @@ const QAPage = () => {
 						{/* Risposte */}
 						<Card sx={{ width: '100%', marginBottom: '20px', borderRadius: '10px', boxShadow: 3, backgroundColor: '#f5f5f5' }}>
 							<CardContent sx={{ display: 'flex', alignItems: 'center' }}>
-								<FormControlLabel value={currentQuestion.answer_a} control={<Radio />} label={currentQuestion.answer_a} />
+								<FormControlLabel value={"answer_a"} control={<Radio />} label={currentQuestion.answer_a} />
 							</CardContent>
 						</Card>
 						<Card sx={{ width: '100%', marginBottom: '20px', borderRadius: '10px', boxShadow: 3, backgroundColor: '#f5f5f5' }}>
 							<CardContent sx={{ display: 'flex', alignItems: 'center' }}>
-								<FormControlLabel value={currentQuestion.answer_b} control={<Radio />} label={currentQuestion.answer_b} />
+								<FormControlLabel value={"answer_b"} control={<Radio />} label={currentQuestion.answer_b} />
 							</CardContent>
 						</Card>
 						<Card sx={{ width: '100%', marginBottom: '20px', borderRadius: '10px', boxShadow: 3, backgroundColor: '#f5f5f5' }}>
 							<CardContent sx={{ display: 'flex', alignItems: 'center' }}>
-								<FormControlLabel value={currentQuestion.answer_c} control={<Radio />} label={currentQuestion.answer_c} />
+								<FormControlLabel value={"answer_c"} control={<Radio />} label={currentQuestion.answer_c} />
 							</CardContent>
 						</Card>
 					</RadioGroup>
 				</FormControl>
+
+				{/* Messaggio di errore */}
+				{errorMessage && (
+					<Alert severity="error" sx={{ marginTop: '20px', width: '80%' }}>
+						{errorMessage}
+					</Alert>
+				)}
 
 				{/* Bottone Avanti */}
 				<Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: '20px' }}>

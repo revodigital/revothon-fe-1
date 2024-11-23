@@ -1,26 +1,8 @@
 import { Home as HomeIcon } from '@mui/icons-material'
 import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import { FetchQuestions, fetchQuestions } from 'api/api'
 import { useEffect, useState } from 'react'
 
-export interface FetchQuestions {
-	id: number
-	question: string
-	answer_a: string
-	answer_b: string
-	answer_c: string
-	right_answer: string
-}
-
-export async function fetchQuestions(): Promise<FetchQuestions[]> {
-	const response =
-		(await directusClient.request(
-			readItems('quiz', {
-				fields: ['*']
-			})
-		)) ?? []
-
-	return response as FetchQuestions[]
-}
 
 const QAPage = () => {
 	const [questions, setQuestions] = useState<FetchQuestions[]>([])
@@ -30,6 +12,7 @@ const QAPage = () => {
 	useEffect(() => {
 		const loadQuestions = async () => {
 			const data = await fetchQuestions()
+
 			setQuestions(data)
 		}
 		loadQuestions()

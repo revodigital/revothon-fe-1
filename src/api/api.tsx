@@ -6,10 +6,10 @@ export interface CreateDriver {
 	licenseId: string
 	name: string
 	lastname: string
-	birthday: string
+	birthday?: string
 	issueDate?: string
 	validDate: string
-	blacklist: boolean
+	blacklist?: boolean
 }
 
 export interface CreateLog {

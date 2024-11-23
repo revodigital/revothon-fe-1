@@ -134,9 +134,11 @@ const LicensePlateReader = () => {
 
 		if (test) {
 			const sn = test?.name.split('.')
-			const res = await getFileWithRetry(sn[0])
+			let res = (await getFileWithRetry(sn[0])) as any
 			if (res) {
 				console.log('res', res)
+				console.log(res)
+				res = res.data as any
 
 				let driverExist = await existDriver(res.document_number)
 

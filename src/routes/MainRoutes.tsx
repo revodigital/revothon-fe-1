@@ -8,6 +8,7 @@ import { lazy } from 'react'
 import Loadable from 'ui-components/common/Loadable'
 import LanguageSelection from 'views/default'
 import LicenseAccessError from 'views/licenseAccessError'
+import ScanErrorPage from 'views/licenseScanError'
 
 const LazyComponent = Loadable(lazy(() => import('../views/licensePlateReader')))
 
@@ -31,7 +32,7 @@ const MainRoutes = {
 
 		{
 			path: '/scanFailed',
-			element: <LicenseScanError />
+			element: <ScanErrorPage />
 		}
 	]
 }

@@ -1,9 +1,9 @@
-import Routes from 'routes'
-import NavigationScroll from 'layout/NavigationScroll'
-import ThemeCustomization from 'themes'
-import Snackbar from './ui-components/components/Snackbar'
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DirectusAuthProvider } from 'directus/DirectusAuthProvider';
+import NavigationScroll from 'layout/NavigationScroll';
+import Routes from 'routes';
+import ThemeCustomization from 'themes';
+import Snackbar from './ui-components/components/Snackbar';
 
 const queryClient = new QueryClient()
 

@@ -1,31 +1,32 @@
-import {Box, Button} from '@mui/material'
-import Webcam from 'react-webcam'
-import React, { useState } from 'react'
+import HomeIcon from '@mui/icons-material/Home'
+import { Box, Button, IconButton, Link, Typography } from '@mui/material'
 import AWS from 'aws-sdk'
-import {slsTextractOcrDevGetDocumentByFileName} from "../../api-read-license/client";
+import React, { useState } from 'react'
+import Webcam from 'react-webcam'
+import { slsTextractOcrDevGetDocumentByFileName } from '../../api-read-license/client'
 
 AWS.config.update({
 	credentials: {
-		accessKeyId: 'accessKeyId',
-		secretAccessKey: 'secretAccessKey',
-	},
+		accessKeyId: import.meta.env.ACCESS_KEY,
+		secretAccessKey: import.meta.env.ACCESS_SECRET
+	}
 })
 
 const buk = new AWS.S3({
 	params: { Bucket: 'ocr-documents-revo-eni' },
-	region: 'eu-west-1',
+	region: 'eu-west-1'
 })
 
 const LicensePlateReader = () => {
 	const [loading, setLoading] = useState(false)
 	const jonny = React.useRef<any>(null)
-	console.log(setLoading)
+
 	function urlFile(dataurl: any, filename: string) {
-		var arr = dataurl.split(','),
-			mime = arr[0].match(/:(.*?);/)[1],
-			bstr = atob(arr[arr.length - 1]),
-			n = bstr.length,
-			u8arr = new Uint8Array(n)
+		const arr = dataurl.split(',')
+		const mime = arr[0].match(/:(.*?);/)[1]
+		const bstr = atob(arr[arr.length - 1])
+		let n = bstr.length
+		const u8arr = new Uint8Array(n)
 		while (n--) {
 			u8arr[n] = bstr.charCodeAt(n)
 		}
@@ -33,7 +34,6 @@ const LicensePlateReader = () => {
 	}
 
 	const capture = React.useCallback(async () => {
-		console.log('start test')
 		const varA = jonny.current?.getScreenshot()
 		if (varA) {
 			const date = new Date().getTime()
@@ -42,7 +42,7 @@ const LicensePlateReader = () => {
 				const params = {
 					Body: varB,
 					Bucket: 'ocr-documents-revo-eni',
-					Key: 'input/' + varB.name,
+					Key: `input/${varB.name}`
 				}
 				buk.putObject(params).send((err, data) => {
 					if (err) console.log(err)
@@ -60,41 +60,85 @@ const LicensePlateReader = () => {
 	const getFileWithRetry = async (key: any, maxRetries = 5, attempt = 1): Promise<any | undefined> => {
 		try {
 			if (attempt === 1) await new Promise((resolve) => setTimeout(resolve, 4))
-			let ocrResponse = await slsTextractOcrDevGetDocumentByFileName({path: {file: key}})
+			const ocrResponse = await slsTextractOcrDevGetDocumentByFileName({ path: { file: key } })
 			if (!ocrResponse.data?.input) {
 				if (attempt < maxRetries) {
-					await new Promise((resolve) => setTimeout(resolve, 1000 * attempt)) // Attende prima di riprovare, aumentando l'attesa ogni tentativo
+					await new Promise((resolve) => setTimeout(resolve, 1000 * attempt))
 					return getFileWithRetry(key, maxRetries, attempt + 1)
-				} else {
-					return undefined
 				}
-			} else {
-				return ocrResponse
-			}
-		} catch (e: any) {
-			if (attempt < maxRetries) {
-				await new Promise((resolve) => setTimeout(resolve, 1000 * attempt)) // Attende prima di riprovare, aumentando l'attesa ogni tentativo
-				return getFileWithRetry(key, maxRetries, attempt + 1.5)
-			} else {
 				return undefined
 			}
+			return ocrResponse
+		} catch (e: any) {
+			if (attempt < maxRetries) {
+				await new Promise((resolve) => setTimeout(resolve, 1000 * attempt))
+				return getFileWithRetry(key, maxRetries, attempt + 1.5)
+			}
+			return undefined
 		}
 	}
+
 	const handleClick = async () => {
 		setLoading(true)
-		let test = await capture()
+		const test = await capture()
 		if (test) {
 			const sn = test?.name.split('.')
 			const res = await getFileWithRetry(sn[0])
-			if (res) {/* Chiamata api */} else {/* Errore */}
-		} else {}
+			if (res) {
+				/* Chiamata API */
+			} else {
+				/* Errore */
+			}
+		}
 		setLoading(false)
 	}
-	console.log('-------------')
+
 	return (
-		<Box sx={{ textAlign: 'center' }}>
-			<Webcam audio={false} height={720} ref={jonny} screenshotFormat="image/jpeg" width={720} />
-			<Button onClick={handleClick}>Scansiona la patente</Button>
+		<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2, position: 'relative', minHeight: '100vh' }}>
+			<Box sx={{ position: 'absolute', top: 10, left: 10 }}>
+				<IconButton color="primary" aria-label="home">
+					<HomeIcon fontSize="large" />
+				</IconButton>
+			</Box>
+			<Typography variant="h4" sx={{ textAlign: 'center', marginBottom: 2 }}>
+				SCANSIONA LA PATENTE
+			</Typography>
+			<Typography variant="body1" sx={{ textAlign: 'center', marginBottom: 2 }}>
+				Inquadra la patente con la webcam per scansionarla
+			</Typography>
+			<Box
+				sx={{
+					border: '2px solid #ccc',
+					width: 400,
+					height: 300,
+					overflow: 'hidden',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					marginBottom: 2,
+					borderRadius: 2,
+					backgroundColor: '#f9f9f9'
+				}}
+			>
+				<Webcam
+					audio={false}
+					width={400}
+					height={300}
+					ref={jonny}
+					screenshotFormat="image/jpeg"
+					style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+				/>
+			</Box>
+			<Box sx={{ marginTop: 'auto', textAlign: 'center', paddingBottom: 2 }}>
+				<Button variant="contained" color="primary" onClick={handleClick} sx={{ marginBottom: 1 }}>
+					Scansiona Ora
+				</Button>
+				<Typography variant="body2">
+					<Link href="#" color="secondary" underline="hover">
+						Richiedi aiuto ad un operatore
+					</Link>
+				</Typography>
+			</Box>
 		</Box>
 	)
 }

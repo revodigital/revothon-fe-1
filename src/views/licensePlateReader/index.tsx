@@ -1,9 +1,14 @@
 import HomeIcon from '@mui/icons-material/Home'
 import { Box, Button, IconButton, Link, Typography } from '@mui/material'
+import { createDriver, createLog, existDriver } from 'api/api'
 import AWS from 'aws-sdk'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Webcam from 'react-webcam'
 import { slsTextractOcrDevGetDocumentByFileName } from '../../api-read-license/client'
+import { directusClient } from 'App'
+import { useNavigate } from 'react-router-dom'
+import CustomTitle, { CustomDescription } from 'views/components/title'
+import CustomButton from 'views/components/Button'
 
 // example data
 // {
@@ -51,6 +56,16 @@ const buk = new AWS.S3({
 })
 
 const LicensePlateReader = () => {
+	useMemo(async () => {
+		await directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
+	}, [])
+
+	const navigate = useNavigate()
+
+	const handleNavigate = () => {
+		navigate('/qa')
+	}
+
 	const [loading, setLoading] = useState(false)
 	const ref = React.useRef<any>(null)
 
@@ -114,31 +129,80 @@ const LicensePlateReader = () => {
 	const handleClick = async () => {
 		setLoading(true)
 		const test = await capture()
+
+		const login = await directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)
+
 		if (test) {
 			const sn = test?.name.split('.')
-			const res = await getFileWithRetry(sn[0])
+			let res = (await getFileWithRetry(sn[0])) as any
 			if (res) {
-				/* Chiamata API */
+				console.log('res', res)
+				console.log(res)
+				res = res.data as any
+
+				let driverExist = await existDriver(res.document_number)
+
+				console.log('driverExist', driverExist)
+
+				if (!driverExist) {
+					driverExist = await createDriver({
+						name: res.first_name,
+						lastname: res.last_name,
+						blacklist: false,
+						licenseId: res.document_number,
+						validDate: res.expiration_date,
+						birthday: 'data'
+					})
+
+					console.log('driverExist', driverExist)
+					if (!driverExist) {
+						throw Error()
+					}
+				}
+
+				const log = await createLog({
+					autistaId: driverExist.id,
+					complete: false,
+					enteredAt: new Date(),
+					exitAt: new Date(),
+					scan: ''
+				})
+
+				console.log(log, driverExist)
+				localStorage.setItem('currentDriver', JSON.stringify(driverExist))
+				localStorage.setItem('currentLog', JSON.stringify(log))
+				handleNavigate()
 			} else {
-				/* Errore */
+				alert.call('Errore!')
 			}
+
+			// Create log
 		}
 		setLoading(false)
 	}
 
 	return (
-		<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2, position: 'relative', minHeight: '100vh' }}>
-			<Box sx={{ position: 'absolute', top: 10, left: 10 }}>
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				padding: 2,
+				position: 'relative',
+				minHeight: '100vh',
+				background: 'linear-gradient(135deg, #FFD54F, #FF6F00)',
+				color: 'white'
+			}}>
+			{/* <Box sx={{ position: 'absolute', top: 10, left: 10 }}>
 				<IconButton color="primary" aria-label="home">
 					<HomeIcon fontSize="large" />
 				</IconButton>
-			</Box>
-			<Typography variant="h4" sx={{ textAlign: 'center', marginBottom: 2 }}>
-				SCANSIONA LA PATENTE
-			</Typography>
-			<Typography variant="body1" sx={{ textAlign: 'center', marginBottom: 2 }}>
-				Inquadra la patente con la webcam per scansionarla
-			</Typography>
+			</Box> */}
+
+			{/* Titolo Principale */}
+			<CustomTitle text="🍕 Scansiona la patente!!! 🍔" />
+
+			<CustomDescription text="Inquadra la patente con la webcam per scansionarla" />
 			<Box
 				sx={{
 					border: '2px solid #ccc',
@@ -161,16 +225,8 @@ const LicensePlateReader = () => {
 					style={{ width: '100%', height: '100%', objectFit: 'cover' }}
 				/>
 			</Box>
-			<Box sx={{ marginTop: 'auto', textAlign: 'center', paddingBottom: 2 }}>
-				<Button variant="contained" color="primary" onClick={handleClick} sx={{ marginBottom: 1 }}>
-					Scansiona Ora
-				</Button>
-				<Typography variant="body2">
-					<Link href="#" color="secondary" underline="hover">
-						Richiedi aiuto ad un operatore
-					</Link>
-				</Typography>
-			</Box>
+
+			<CustomButton text="🍴 Scansiona Ora 🍴" onClick={handleClick} />
 		</Box>
 	)
 }

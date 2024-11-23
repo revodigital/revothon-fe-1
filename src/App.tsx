@@ -12,6 +12,8 @@ export const directusClient = authProvider.getDirectusInstance()
 
 // ==============================|| APP ||============================== //
 
+const normalUrl = 'admin@rvthn1.it'
+
 const App = () => {
 	useMemo(() => {
 		directusClient.login(import.meta.env.VITE_USERNAME, import.meta.env.VITE_PASSWORD)

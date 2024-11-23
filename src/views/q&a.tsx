@@ -16,6 +16,7 @@ import { directusClient } from 'App'
 import { FetchQuestions, fetchQuestions } from 'api/api'
 import { useEffect, useState } from 'react'
 import CustomTitle from './components/title'
+import CustomButton from './components/Button'
 
 const QAPage = () => {
 	const [questions, setQuestions] = useState<FetchQuestions[]>([])
@@ -87,6 +88,9 @@ const QAPage = () => {
 	function Quiz() {
 		return `Step ${currentQuestionIndex + 1}/${questions.length}`
 	}
+	function Quiz2() {
+		return `${currentQuestionIndex < questions.length - 1 ? 'Avanti' : 'Invia'}`
+	}
 	// eslint-disable-next-line consistent-return
 	return (
 		<Box
@@ -148,9 +152,7 @@ const QAPage = () => {
 				)}
 
 				{/* Bottone Avanti */}
-				<Button variant="contained" color="primary" onClick={handleNext} sx={{ marginTop: '20px' }}>
-					{currentQuestionIndex < questions.length - 1 ? 'Avanti' : 'Invia'}
-				</Button>
+				<CustomButton text={Quiz2()} onClick={handleNext} />
 			</Box>
 		</Box>
 	)

@@ -1,12 +1,14 @@
 import { Home as HomeIcon } from '@mui/icons-material'
-import { Box, Button, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import CustomTitle from './components/title'
+import CustomButton from './components/Button'
 
 const WelcomePage = () => {
-	const navigate = useNavigate() // Initialize useNavigate
+	const navigate = useNavigate()
 
 	const handleNavigate = () => {
-		navigate('/language') // Navigate to the "/language" route
+		navigate('/language')
 	}
 
 	return (
@@ -19,58 +21,33 @@ const WelcomePage = () => {
 				alignItems: 'center',
 				justifyContent: 'center',
 				padding: '20px',
-				background: 'linear-gradient(135deg, #4facfe, #00f2fe)',
+				background: 'linear-gradient(135deg, #FFD54F, #FF6F00)',
 				color: 'white'
 			}}>
 			{/* Icona Home in alto a sinistra */}
 			<Box sx={{ position: 'absolute', top: '20px', left: '20px' }}>
-				<Button href="/">
-					<HomeIcon sx={{ color: 'white' }} />
-				</Button>
+				<CustomButton text={<HomeIcon />} onClick={() => navigate('/')} />
 			</Box>
 
-			{/* Messaggio di benvenuto */}
-			<Typography
-				variant="h3"
-				sx={{
-					fontWeight: 'bold',
-					textAlign: 'center',
-					marginBottom: '20px',
-					textShadow: '0px 2px 4px rgba(0,0,0,0.4)'
-				}}>
-				Benvenuto!
-			</Typography>
+			{/* Titolo Principale */}
+			<CustomTitle text="🍕 Benvenuto nel Totem della Bontà! 🍔" />
 
-			<Typography
-				variant="h6"
+			{/* Descrizione Simpatica */}
+			<Box
 				sx={{
 					marginBottom: '40px',
 					textAlign: 'center',
-					maxWidth: '500px',
-					textShadow: '0px 1px 2px rgba(0,0,0,0.4)'
+					maxWidth: '600px',
+					lineHeight: '1.6',
+					textShadow: '0px 2px 4px rgba(0,0,0,0.4)'
 				}}>
-				Sei pronto a iniziare? Clicca il pulsante qui sotto per continuare con la configurazione della lingua.
-			</Typography>
+				Ti trovi nel posto giusto per un'esperienza culinaria unica! <br />
+				Che tu sia uno chef stellato o un campione nel bruciare toast, qui troverai qualcosa di speciale. <br /> Premi il pulsante
+				qui sotto e preparati a un viaggio di sapori (e risate)!
+			</Box>
 
-			{/* Bottone per proseguire */}
-			<Button
-				variant="contained"
-				color="secondary"
-				onClick={handleNavigate} // Call the navigation function on click
-				sx={{
-					padding: '10px 20px',
-					fontSize: '18px',
-					fontWeight: 'bold',
-					borderRadius: '30px',
-					boxShadow: '0px 4px 10px rgba(0,0,0,0.2)',
-					textTransform: 'none',
-					backgroundColor: '#ff4081',
-					'&:hover': {
-						backgroundColor: '#f50057'
-					}
-				}}>
-				Inizia
-			</Button>
+			{/* Bottone per Proseguire */}
+			<CustomButton text="🍴 Inizia l'avventura 🍴" onClick={handleNavigate} />
 		</Box>
 	)
 }

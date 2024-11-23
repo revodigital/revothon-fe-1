@@ -9,6 +9,7 @@ import Loadable from 'ui-components/common/Loadable'
 import LanguageSelection from 'views/default'
 import SuccessPage from 'views/licenseAccessComplete'
 import LicenseAccessError from 'views/licenseAccessError'
+import LicenseScanResult from 'views/licenseScan'
 import ScanErrorPage from 'views/licenseScanError'
 import QAPage from 'views/q&a'
 import WelcomePage from 'views/welcomePage'
@@ -35,6 +36,12 @@ const MainRoutes = {
 		{
 			path: '/scan',
 			element: <LazyComponent />
+		},
+
+		// Scan result
+		{
+			path: '/scanResult',
+			element: <LicenseScanResult />
 		},
 
 		// Page to handle access failed

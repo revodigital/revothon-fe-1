@@ -7,8 +7,8 @@ import { slsTextractOcrDevGetDocumentByFileName } from '../../api-read-license/c
 
 AWS.config.update({
 	credentials: {
-		accessKeyId: import.meta.env.ACCESS_KEY,
-		secretAccessKey: import.meta.env.ACCESS_SECRET
+		accessKeyId: import.meta.env.VITE_ACCESS_KEY_ID,
+		secretAccessKey: import.meta.env.VITE_SECRET_ACCESS_KEY
 	}
 })
 
@@ -19,7 +19,7 @@ const buk = new AWS.S3({
 
 const LicensePlateReader = () => {
 	const [loading, setLoading] = useState(false)
-	const jonny = React.useRef<any>(null)
+	const ref = React.useRef<any>(null)
 
 	function urlFile(dataurl: any, filename: string) {
 		const arr = dataurl.split(',')
@@ -34,7 +34,7 @@ const LicensePlateReader = () => {
 	}
 
 	const capture = React.useCallback(async () => {
-		const varA = jonny.current?.getScreenshot()
+		const varA = ref.current?.getScreenshot()
 		if (varA) {
 			const date = new Date().getTime()
 			const varB = urlFile(varA, `img-${date}.jpeg`)
@@ -55,7 +55,7 @@ const LicensePlateReader = () => {
 		} else {
 			return undefined
 		}
-	}, [jonny])
+	}, [ref])
 
 	const getFileWithRetry = async (key: any, maxRetries = 5, attempt = 1): Promise<any | undefined> => {
 		try {
@@ -118,13 +118,12 @@ const LicensePlateReader = () => {
 					marginBottom: 2,
 					borderRadius: 2,
 					backgroundColor: '#f9f9f9'
-				}}
-			>
+				}}>
 				<Webcam
 					audio={false}
 					width={400}
 					height={300}
-					ref={jonny}
+					ref={ref}
 					screenshotFormat="image/jpeg"
 					style={{ width: '100%', height: '100%', objectFit: 'cover' }}
 				/>

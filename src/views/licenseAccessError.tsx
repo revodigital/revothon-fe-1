@@ -1,7 +1,13 @@
 import HomeIcon from '@mui/icons-material/Home'
 import { Box, Button, IconButton, Link, Typography } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const LicenseAccessError = () => {
+	const navigate = useNavigate() // Initialize useNavigate
+
+	const handleNavigate = () => {
+		navigate('/language') // Navigate to the "/language" route
+	}
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
 			{/* Icona Home */}

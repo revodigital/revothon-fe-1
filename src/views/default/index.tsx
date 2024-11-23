@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardContent, Checkbox, Container, Grid, Typography } from '@mui/material'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // Tipo per definire le lingue
 interface Language {
@@ -16,6 +17,12 @@ const languages = [
 ]
 
 const LanguageSelection: React.FC<{}> = () => {
+	const navigate = useNavigate()
+
+	const handleNavigate = () => {
+		navigate('/scan')
+	}
+
 	const [selectedLanguages, setSelectedLanguages] = React.useState<string[]>([])
 
 	const handleLanguageChange = (id: string) => {
@@ -80,7 +87,7 @@ const LanguageSelection: React.FC<{}> = () => {
 					variant="contained"
 					color="primary"
 					size="large"
-					onClick={handleNext}
+					onClick={handleNavigate}
 					disabled={selectedLanguages.length === 0}
 					sx={{
 						width: '100%',

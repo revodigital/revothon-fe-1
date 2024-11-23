@@ -15,6 +15,7 @@ import {
 import { directusClient } from 'App'
 import { FetchQuestions, fetchQuestions } from 'api/api'
 import { useEffect, useState } from 'react'
+import CustomTitle from './components/title'
 
 const QAPage = () => {
 	const [questions, setQuestions] = useState<FetchQuestions[]>([])
@@ -83,6 +84,9 @@ const QAPage = () => {
 
 	const currentQuestion = questions[currentQuestionIndex]
 
+	function Quiz() {
+		return `Step ${currentQuestionIndex + 1}/${questions.length}`
+	}
 	// eslint-disable-next-line consistent-return
 	return (
 		<Box
@@ -107,9 +111,8 @@ const QAPage = () => {
 			{/* Contenitore per la domanda */}
 			<Box sx={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 				{/* Step */}
-				<Typography variant="h6" color="textSecondary" sx={{ marginBottom: '30px', marginTop: '50px', fontSize: '24px' }}>
-					Step {currentQuestionIndex + 1}/{questions.length}
-				</Typography>
+
+				<CustomTitle text={Quiz()} />
 
 				{/* Titolo Principale */}
 				{/* Domanda */}

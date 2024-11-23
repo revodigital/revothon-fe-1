@@ -1,8 +1,14 @@
 import { Home as HomeIcon } from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const WelcomePage = () => {
+	const navigate = useNavigate() // Initialize useNavigate
+
+	const handleNavigate = () => {
+		navigate('/language') // Navigate to the "/language" route
+	}
+
 	return (
 		<Box
 			sx={{
@@ -50,8 +56,7 @@ const WelcomePage = () => {
 			<Button
 				variant="contained"
 				color="secondary"
-				component={Link}
-				to="/language"
+				onClick={handleNavigate} // Call the navigation function on click
 				sx={{
 					padding: '10px 20px',
 					fontSize: '18px',

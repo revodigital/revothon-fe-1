@@ -1,5 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home'
 import { Box, Button, IconButton, Link, Typography } from '@mui/material'
+import { createDriver, existDriver } from 'api/api'
 import AWS from 'aws-sdk'
 import React, { useState } from 'react'
 import Webcam from 'react-webcam'
@@ -118,9 +119,9 @@ const LicensePlateReader = () => {
 			const sn = test?.name.split('.')
 			const res = await getFileWithRetry(sn[0])
 			if (res) {
-				/* Chiamata API */
+				const driver = await existDriver(res.document_number)
 			} else {
-				/* Errore */
+				const driver = await createDriver(res.document_number, res.first_name, res.last_name, res.expiration_date)
 			}
 		}
 		setLoading(false)

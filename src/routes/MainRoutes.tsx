@@ -11,6 +11,7 @@ import SuccessPage from 'views/licenseAccessComplete'
 import LicenseAccessError from 'views/licenseAccessError'
 import ScanErrorPage from 'views/licenseScanError'
 import QAPage from 'views/q&a'
+import WelcomePage from 'views/welcomePage'
 
 const LazyComponent = Loadable(lazy(() => import('../views/licensePlateReader')))
 
@@ -18,6 +19,12 @@ const MainRoutes = {
 	path: '/',
 	element: <MinimalLayout />,
 	children: [
+		// Welcome page
+		{
+			path: '/',
+			element: <WelcomePage />
+		},
+
 		// Language page
 		{
 			path: '/language',
@@ -48,6 +55,7 @@ const MainRoutes = {
 			element: <QAPage />
 		},
 
+		// Page to handle success login
 		{
 			path: '/successPage',
 			element: <SuccessPage />
